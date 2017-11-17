@@ -10,10 +10,19 @@ parser = argparse.ArgumentParser(description='Translate sentences using the Deep
 parser.add_argument('-l', '--language', default='EN', dest='lang',
                     help="The language to translate into. Defaults to English.")
 parser.add_argument('text', nargs='+', help="The text to be translated.")
+
+
+print('parser: {}'.format(parser))
+
 args = parser.parse_args()
+
+
+print('args: {}'.format(args))
 text = " ".join(args.text)
+
 sp = re.compile("([^\.!\?;]+[\.!\?;]*)")
 sentences = [s for s in sp.split(text) if len(s) > 0]
+
 payload = {
     "jsonrpc": "2.0", "method": "LMT_handle_jobs", "id": 1,
     "params": {
@@ -22,6 +31,8 @@ payload = {
                  "source_lang_user_selected": "auto",
                  "target_lang": args.lang},
         "priority": 1}}
+
+
 r = requests.post('https://deepl.com/jsonrpc', data=json.dumps(payload))
 translations = json.loads(r.text)['result']['translations']
 for translation in translations:
